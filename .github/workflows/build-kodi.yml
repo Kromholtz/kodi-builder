@@ -336,13 +336,15 @@ jobs:
           find ~/kodi/tools/android/packaging -type f -name "*.xml" -o -name "*.gradle" | \
             xargs sed -i "s|>Kodi<|>$APP<|g; s|\"Kodi\"|\"$APP\"|g" 2>/dev/null || true
 
-      - name: Apply custom package ID
+        - name: Apply custom package ID
         if: github.event.inputs.package_id != 'org.xbmc.kodi'
         run: |
+          set -euo pipefail
           PKG="${{ github.event.inputs.package_id }}"
           echo "📦 Setting package ID: $PKG"
-          find ~/kodi/tools/android/packaging -type f | \
-            xargs sed -i "s|org\.xbmc\.kodi|$PKG|g" 2>/dev/null || true
+          sed -i "s|^APP_PACKAGE .*|APP_PACKAGE $PKG|" ~/kodi/version.txt
+          grep -Fxq "APP_PACKAGE $PKG" ~/kodi/version.txt
+          echo "✅ Package ID verified: $PKG"
 
       - name: Apply custom icon
         run: |
@@ -1114,6 +1116,17 @@ jobs:
             --key-pass pass:android \
             --out "$OUT" \
             "$ALIGNED"
+          EXPECTED_PKG="${{ github.event.inputs.package_id }}"
+          ACTUAL_PKG=$("$BUILD_TOOLS/aapt" dump badging "$OUT" | sed -n "s/^package: name='\([^']*\)'.*/\1/p")
+
+          echo "Expected package: $EXPECTED_PKG"
+          echo "Actual package: $ACTUAL_PKG"
+
+          if [ -z "$ACTUAL_PKG" ] || [ "$ACTUAL_PKG" != "$EXPECTED_PKG" ]; then
+            echo "❌ Package ID mismatch! Refusing to publish APK."
+            exit 1
+          fi
+          echo "✅ APK package ID verified: $ACTUAL_PKG"
 
           SIZE=$(du -sh "$OUT" | cut -f1)
           echo "✅ Signed APK: $OUT_NAME ($SIZE)"
