@@ -18,12 +18,6 @@
     <readfactor>4</readfactor>           <!-- Read ahead multiplier -->
   </cache>
 
-  <!-- Video player tweaks -->
-  <videoplayer>
-    <adjustrefreshrate>2</adjustrefreshrate>  <!-- Always match refresh rate to content -->
-    <synctype>1</synctype>
-  </videoplayer>
-
   <!-- Skip unwanted video extensions -->
   <videoextensions>
     <remove>.nfo</remove>
