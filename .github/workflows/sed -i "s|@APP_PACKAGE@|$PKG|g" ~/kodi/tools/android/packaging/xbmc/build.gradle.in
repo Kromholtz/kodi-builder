@@ -341,8 +341,9 @@ jobs:
         run: |
           PKG="${{ github.event.inputs.package_id }}"
           echo "📦 Setting package ID: $PKG"
-          find ~/kodi/tools/android/packaging -type f | \
-            xargs sed -i "s|org\.xbmc\.kodi|$PKG|g" 2>/dev/null || true
+          sed -i "s|^APP_PACKAGE .*|APP_PACKAGE $PKG|" ~/kodi/version.txt
+          grep -Fxq "APP_PACKAGE $PKG" ~/kodi/version.txt
+          echo "✅ Package ID verified: $PKG"
 
       - name: Apply custom icon
         run: |
