@@ -774,11 +774,11 @@ jobs:
           # libzip. In this workflow we intentionally skip gnutls in depends, so patch
           # libzip discovery to use OpenSSL-backed libzip instead of failing configure.
           if [ -f cmake/modules/FindLibZip.cmake ]; then
-            echo "Patching FindLibZip.cmake to avoid hard GnuTLS dependency..."
-            sed -i 's/find_package(GnuTLS MODULE REQUIRED)/find_package(GnuTLS MODULE QUIET)/' cmake/modules/FindLibZip.cmake
-            sed -i '/set(CMAKE_ARGS -DBUILD_DOC=OFF/a\                 -DENABLE_GNUTLS=OFF\n                 -DENABLE_OPENSSL=ON\n                 -DENABLE_MBEDTLS=OFF\n                 -DENABLE_WINDOWS_CRYPTO=OFF\n                 -DENABLE_COMMONCRYPTO=OFF' cmake/modules/FindLibZip.cmake
-            echo "Patched lines:"
-            grep -n "GnuTLS\|ENABLE_GNUTLS\|ENABLE_OPENSSL\|ENABLE_MBEDTLS" cmake/modules/FindLibZip.cmake || true
+          echo "Patching FindLibZip.cmake to avoid hard GnuTLS dependency..."
+          sed -i 's/find_package(GnuTLS REQUIRED ${SEARCH_QUIET})/find_package(GnuTLS QUIET)/' cmake/modules/FindLibZip.cmake
+          sed -i '/set(CMAKE_ARGS -DBUILD_DOC=OFF/a\                 -DENABLE_GNUTLS=OFF\n                 -DENABLE_OPENSSL=ON\n                 -DENABLE_MBEDTLS=OFF\n                 -DENABLE_WINDOWS_CRYPTO=OFF\n                 -DENABLE_COMMONCRYPTO=OFF' cmake/modules/FindLibZip.cmake
+          echo "Patched lines:"
+          grep -n "GnuTLS\|ENABLE_GNUTLS\|ENABLE_OPENSSL\|ENABLE_MBEDTLS" cmake/modules/FindLibZip.cmake || true
           fi
 
           # ENABLE=OFF: explicitly disable features we skipped in depends.
