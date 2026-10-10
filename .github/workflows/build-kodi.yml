@@ -336,7 +336,7 @@ jobs:
           find ~/kodi/tools/android/packaging -type f -name "*.xml" -o -name "*.gradle" | \
             xargs sed -i "s|>Kodi<|>$APP<|g; s|\"Kodi\"|\"$APP\"|g" 2>/dev/null || true
 
-        - name: Apply custom package ID
+      - name: Apply custom package ID
         if: github.event.inputs.package_id != 'org.xbmc.kodi'
         run: |
           set -euo pipefail
