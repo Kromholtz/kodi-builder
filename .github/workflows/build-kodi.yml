@@ -1130,6 +1130,9 @@ jobs:
           echo "🔍 Android SDK requirements:"
           "$BUILD_TOOLS/aapt" dump badging "$OUT" | grep -E "^(sdkVersion|targetSdkVersion|uses-feature|native-code):" || true
           echo "🔍 APK manifest inspection complete"
+          echo "🔍 Android TV launcher and compatibility:"
+          "$BUILD_TOOLS/aapt" dump badging "$OUT" | grep -E "^(launchable-activity|leanback-launchable-activity|uses-feature|supports-screens|application-label):" || true
+          echo "🔍 Android TV inspection complete"
 
           SIZE=$(du -sh "$OUT" | cut -f1)
           echo "✅ Signed APK: $OUT_NAME ($SIZE)"
