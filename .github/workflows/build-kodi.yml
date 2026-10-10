@@ -728,7 +728,7 @@ jobs:
           # cache hits. Without it, cmakebuildsys has no CMAKE_SOURCE_DIR, no
           # CMAKE_TOOLCHAIN_FILE, and no PREFIX — causing the cmake invocation to
           # silently drop the Kodi source path and the cross-compilation toolchain.
-          if [ ! -f "$DEPENDS_DIR/Makefile.include" ]; then
+          if true; then
             echo "📦 Regenerating Makefile.include (not present after cache restore)..."
             cd "$DEPENDS_DIR"
             ./bootstrap
